@@ -55,6 +55,17 @@ UserSchema.methods.generateAuthToken = function(){
     })
 }
 
+UserSchema.methods.removeToken = function (token){
+    var user = this;
+
+    return user.update({
+        $pull: {
+            tokens: {token}
+        }
+    });
+};
+
+
 UserSchema.statics.findByToken = function(token){
     var User = this;
     var decoded;
@@ -91,19 +102,7 @@ UserSchema.statics.findByCredentials = function(email, password) {
            }); 
         });
     });
-};  
-    // User.findOne({email}).then((user) => {
-    //     if(!user){
-    //         return res.status(404).send();
-    //     }
-    //     bcrypt.compare(password, user.password, (err, res) => {
-    //         if(err){
-    //             return res.status(404).send();
-    //         }
-    //         res.status(200).send(user);
-    //     })
-    // });
-
+};
 
 UserSchema.pre('save', function(next) {
     var user = this;
